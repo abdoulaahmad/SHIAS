@@ -63,4 +63,12 @@ export class PrismaAccessGrantRepository implements IAccessGrantRepository {
     });
     return grant ? this.toDomain(grant) : null;
   }
+
+  async listByProviderId(providerId: string): Promise<AccessGrant[]> {
+    const grants = await this.prisma.accessGrant.findMany({
+      where: { providerId },
+      orderBy: { createdAt: 'desc' }
+    });
+    return grants.map(g => this.toDomain(g));
+  }
 }

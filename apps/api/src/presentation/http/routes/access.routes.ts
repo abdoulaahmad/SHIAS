@@ -4,14 +4,18 @@ import {
   RequestAccessSchema, 
   GetAccessGrantSchema, 
   RevokeAccessGrantSchema,
-  ValidateTokenSchema
+  ValidateTokenSchema,
+  ListProviderGrantsSchema,
+  ListProviderAccessRequestsSchema
 } from './access.schemas';
-import { AccessGrant } from '../../../domain/access';
+import { AccessGrant, AccessRequest } from '../../../domain/access';
 import { 
   requestAccessUseCase,
   getAccessGrantUseCase,
   revokeAccessGrantUseCase,
   validateTokenUseCase,
+  listProviderGrantsUseCase,
+  listProviderAccessRequestsUseCase,
   tokenService
 } from '../../../infrastructure/di/container';
 
@@ -28,6 +32,17 @@ function mapAccessGrant(grant: AccessGrant) {
     expiresAt: grant.expiresAt.toISOString(),
     createdAt: grant.createdAt.toISOString(),
     revokedAt: grant.revokedAt?.toISOString() ?? null
+  };
+}
+
+function mapAccessRequest(request: AccessRequest) {
+  return {
+    id: request.id,
+    patientId: request.patientId,
+    providerId: request.providerId,
+    purpose: request.purpose,
+    pointerIds: request.pointerIds,
+    createdAt: request.createdAt.toISOString()
   };
 }
 
@@ -85,5 +100,17 @@ export const accessRoutes: FastifyPluginAsync = async (fastify: FastifyInstance)
     const body = request.body as any;
     const result = await validateTokenUseCase.execute(body.token);
     return reply.status(200).send(result);
+  });
+
+  server.get('/providers/:providerId/grants', { schema: ListProviderGrantsSchema }, async (request: FastifyRequest, reply: FastifyReply) => {
+    const params = request.params as { providerId: string };
+    const grants = await listProviderGrantsUseCase.execute(params.providerId);
+    return reply.status(200).send(grants.map(mapAccessGrant));
+  });
+
+  server.get('/providers/:providerId/access-requests', { schema: ListProviderAccessRequestsSchema }, async (request: FastifyRequest, reply: FastifyReply) => {
+    const params = request.params as { providerId: string };
+    const requests = await listProviderAccessRequestsUseCase.execute(params.providerId);
+    return reply.status(200).send(requests.map(mapAccessRequest));
   });
 };

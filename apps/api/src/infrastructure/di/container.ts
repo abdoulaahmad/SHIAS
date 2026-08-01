@@ -1,6 +1,6 @@
 import { PrismaUserRepository, PrismaProviderRepository } from '../repositories';
 import { Argon2PasswordHasher, JwtTokenService } from '../services';
-import { RegisterPatientUseCase, RegisterProviderUseCase, AuthenticateUserUseCase, RefreshSessionUseCase } from '../../application/use-cases';
+import { RegisterPatientUseCase, RegisterProviderUseCase, AuthenticateUserUseCase, RefreshSessionUseCase, SearchPatientsUseCase } from '../../application/use-cases';
 import { prisma } from '@shias/database';
 
 export const userRepository = new PrismaUserRepository(prisma);
@@ -55,7 +55,9 @@ import {
   RequestAccessUseCase,
   GetAccessGrantUseCase,
   RevokeAccessGrantUseCase,
-  ValidateTokenUseCase
+  ValidateTokenUseCase,
+  ListProviderGrantsUseCase,
+  ListProviderAccessRequestsUseCase
 } from '../../application/use-cases/access';
 
 const providerContextRepository = new ProviderContextRepo(prisma);
@@ -108,11 +110,14 @@ export const requestAccessUseCase = new RequestAccessUseCase(
 export const getAccessGrantUseCase = new GetAccessGrantUseCase(accessGrantRepository);
 export const revokeAccessGrantUseCase = new RevokeAccessGrantUseCase(accessGrantRepository);
 export const validateTokenUseCase = new ValidateTokenUseCase(accessTokenService, accessGrantRepository);
+export const listProviderGrantsUseCase = new ListProviderGrantsUseCase(accessGrantRepository);
+export const listProviderAccessRequestsUseCase = new ListProviderAccessRequestsUseCase(accessRequestRepository);
 
 export const registerPatientUseCase = new RegisterPatientUseCase(userRepository, passwordHasher, domainEventPublisher);
 export const registerProviderUseCase = new RegisterProviderUseCase(userRepository, providerRepository, passwordHasher, domainEventPublisher);
 export const authenticateUserUseCase = new AuthenticateUserUseCase(userRepository, passwordHasher, tokenService);
 export const refreshSessionUseCase = new RefreshSessionUseCase(userRepository, tokenService);
+export const searchPatientsUseCase = new SearchPatientsUseCase(userRepository);
 import {
   SearchAuditEventsUseCase,
   GetAuditEventUseCase,

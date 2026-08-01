@@ -41,4 +41,12 @@ export class PrismaAccessRequestRepository implements IAccessRequestRepository {
     });
     return request ? this.toDomain(request) : null;
   }
+
+  async listByProviderId(providerId: string): Promise<AccessRequest[]> {
+    const requests = await this.prisma.accessRequest.findMany({
+      where: { providerId },
+      orderBy: { createdAt: 'desc' }
+    });
+    return requests.map(r => this.toDomain(r));
+  }
 }

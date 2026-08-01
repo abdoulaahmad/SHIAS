@@ -11,6 +11,8 @@ import { consentRoutes } from './presentation/http/routes/consent.routes';
 import { accessRoutes } from './presentation/http/routes/access.routes';
 import { auditRoutes } from './presentation/http/routes/audit.routes';
 
+import { patientRoutes } from './presentation/http/routes/patient.routes';
+
 const server = Fastify({
   logger: {
     level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
@@ -29,8 +31,9 @@ server.register(authRoutes, { prefix: '/api/v1/auth' });
 server.register(providerRoutes, { prefix: '/api/v1' });
 server.register(pointerRoutes, { prefix: '/api/v1' });
 server.register(consentRoutes, { prefix: '/api/v1/consents' });
-server.register(accessRoutes, { prefix: '/api/v1/access' });
+server.register(accessRoutes, { prefix: '/api/v1' });
 server.register(auditRoutes, { prefix: '/api/v1/audit' });
+server.register(patientRoutes, { prefix: '/api/v1' });
 
 server.get('/v1/health', async (request, reply) => {
   try {

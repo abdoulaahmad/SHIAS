@@ -46,6 +46,31 @@ export const GetAccessGrantSchema = {
   }
 };
 
+export const ListProviderGrantsSchema = {
+  params: Type.Object({
+    providerId: Type.String()
+  }),
+  response: {
+    200: Type.Array(AccessGrantSchema)
+  }
+};
+
+export const ListProviderAccessRequestsSchema = {
+  params: Type.Object({
+    providerId: Type.String()
+  }),
+  response: {
+    200: Type.Array(Type.Object({
+      id: Type.String(),
+      patientId: Type.String(),
+      providerId: Type.String(),
+      purpose: Type.Enum(ConsentPurpose),
+      pointerIds: Type.Array(Type.String()),
+      createdAt: Type.String({ format: 'date-time' })
+    }))
+  }
+};
+
 export const RevokeAccessGrantSchema = {
   params: Type.Object({
     id: Type.String()

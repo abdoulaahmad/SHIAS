@@ -36,6 +36,21 @@ export class PrismaUserRepository implements IUserRepository {
     return this.mapToDomain(record);
   }
 
+  async searchPatients(query: string): Promise<User[]> {
+    const records = await this.prisma.user.findMany({
+      where: {
+        role: 'PATIENT' as any,
+        deletedAt: null,
+        OR: [
+          { name: { contains: query, mode: 'insensitive' } },
+          { email: { contains: query, mode: 'insensitive' } }
+        ]
+      },
+      take: 20
+    });
+    return records.map(r => this.mapToDomain(r));
+  }
+
   async save(user: User): Promise<void> {
     await this.prisma.user.create({
       data: {
