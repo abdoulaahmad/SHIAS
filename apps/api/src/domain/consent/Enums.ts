@@ -1,0 +1,15 @@
+export enum ConsentStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  REVOKED = 'REVOKED',
+  EXPIRED = 'EXPIRED',
+  ARCHIVED = 'ARCHIVED'
+}
+
+export enum ConsentPurpose {
+  TREATMENT = 'TREATMENT',
+  EMERGENCY = 'EMERGENCY',
+  RESEARCH = 'RESEARCH',
+  BILLING = 'BILLING'
+}

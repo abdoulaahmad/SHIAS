@@ -1,0 +1,12 @@
+export enum RecordType {
+  ENCOUNTER = 'ENCOUNTER',
+  LAB_RESULT = 'LAB_RESULT',
+  PRESCRIPTION = 'PRESCRIPTION',
+  DOCUMENT = 'DOCUMENT'
+}
+
+export enum PointerStatus {
+  ACTIVE = 'ACTIVE',
+  ARCHIVED = 'ARCHIVED',
+  REVOKED = 'REVOKED'
+}

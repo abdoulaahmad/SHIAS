@@ -1,0 +1,219 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProviderStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+model User {
+  id         String    @id @default(uuid())
+  healthId   String?   @unique
+  name       String
+  email      String    @unique
+  password   String
+  role       String    @default("PATIENT")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  consents      Consent[]
+  staffLinks    ProviderStaff[]
+  pointers      Pointer[]
+  accessReqs    AccessRequest[]
+  accessGrants  AccessGrant[]
+}
+
+model Provider {
+  id        String         @id @default(uuid())
+  npi       String         @unique
+  name      String
+  type      String
+  status    ProviderStatus @default(ACTIVE)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  deletedAt DateTime?
+
+  pointers      Pointer[]
+  consents      Consent[]
+  staff         ProviderStaff[]
+  accessReqs    AccessRequest[]
+  accessGrants  AccessGrant[]
+
+  @@index([status])
+}
+
+model ProviderStaff {
+  id         String    @id @default(uuid())
+  providerId String
+  userId     String
+  role       String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  provider   Provider  @relation(fields: [providerId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
+
+  @@unique([providerId, userId])
+  @@index([providerId])
+  @@index([userId])
+}
+
+enum RecordType {
+  ENCOUNTER
+  LAB_RESULT
+  PRESCRIPTION
+  DOCUMENT
+}
+
+enum PointerStatus {
+  ACTIVE
+  ARCHIVED
+  REVOKED
+}
+
+model Pointer {
+  id               String        @id @default(uuid())
+  patientId        String
+  providerId       String
+  recordType       RecordType
+  externalSystemId String
+  externalRecordId String
+  externalUri      String
+  status           PointerStatus @default(ACTIVE)
+  recordCreatedAt  DateTime
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  archivedAt       DateTime?
+  deletedAt        DateTime?
+
+  provider         Provider      @relation(fields: [providerId], references: [id])
+  patient          User          @relation(fields: [patientId], references: [id])
+
+  @@unique([providerId, externalSystemId, externalRecordId])
+  @@index([patientId])
+  @@index([providerId])
+  @@index([status])
+}
+
+enum ConsentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  REVOKED
+  EXPIRED
+  ARCHIVED
+}
+
+enum ConsentPurpose {
+  TREATMENT
+  EMERGENCY
+  RESEARCH
+  BILLING
+}
+
+model Consent {
+  id         String         @id @default(uuid())
+  patientId  String
+  providerId String
+  status     ConsentStatus  @default(PENDING)
+  scope      Json
+  purpose    ConsentPurpose
+  startsAt   DateTime?
+  expiresAt  DateTime?
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  revokedAt  DateTime?
+  archivedAt DateTime?
+  deletedAt  DateTime?
+
+  patient    User           @relation(fields: [patientId], references: [id])
+  provider   Provider       @relation(fields: [providerId], references: [id])
+
+  @@index([patientId, providerId, status])
+}
+
+enum AccessStatus {
+  ACTIVE
+  EXPIRED
+  REVOKED
+}
+
+model AccessRequest {
+  id         String   @id @default(uuid())
+  patientId  String
+  providerId String
+  purpose    ConsentPurpose
+  pointerIds String[]
+  createdAt  DateTime @default(now())
+
+  patient    User     @relation(fields: [patientId], references: [id])
+  provider   Provider @relation(fields: [providerId], references: [id])
+  
+  grant      AccessGrant?
+}
+
+model AccessGrant {
+  id         String       @id @default(uuid())
+  requestId  String       @unique
+  patientId  String
+  providerId String
+  consentId  String
+  pointerIds String[]
+  purpose    ConsentPurpose
+  status     AccessStatus @default(ACTIVE)
+  expiresAt  DateTime
+  createdAt  DateTime     @default(now())
+  revokedAt  DateTime?
+
+  request    AccessRequest @relation(fields: [requestId], references: [id])
+  patient    User          @relation(fields: [patientId], references: [id])
+  provider   Provider      @relation(fields: [providerId], references: [id])
+
+  @@index([patientId, providerId, status])
+}
+
+enum AuditCategory {
+  SECURITY
+  CONSENT
+  ACCESS
+  REGISTRATION
+  SYSTEM
+}
+
+enum AuditSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+enum AuditOutcome {
+  SUCCESS
+  FAILURE
+}
+
+model AuditLog {
+  id            String        @id @default(uuid())
+  correlationId String
+  category      AuditCategory
+  severity      AuditSeverity
+  outcome       AuditOutcome
+  action        String
+  actorId       String
+  resource      String
+  details       Json
+  ipAddress     String?
+  createdAt     DateTime      @default(now())
+
+  @@index([correlationId])
+  @@index([actorId])
+  @@index([resource])
+  @@index([category])
+}

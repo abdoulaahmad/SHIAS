@@ -1,0 +1,11 @@
+{
+  "name": "@shias/config",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "echo \"No typecheck in config package\"",
+    "test": "echo \"No tests in config package\""
+  },
+  "description": "Shared configuration for SHIAS monorepo"
+}
