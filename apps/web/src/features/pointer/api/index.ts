@@ -12,6 +12,10 @@ export const pointerApi = {
     return api.get(`/providers/${providerId}/pointers`);
   },
 
+  getPatientPointers: async (patientId: string): Promise<Pointer[]> => {
+    return api.get(`/patients/${patientId}/pointers`);
+  },
+
   registerPointer: async (data: RegisterPointerDto): Promise<Pointer> => {
     return api.post("/pointers", data);
   },

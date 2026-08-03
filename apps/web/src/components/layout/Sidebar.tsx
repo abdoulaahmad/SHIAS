@@ -6,26 +6,27 @@ import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/features/auth/store";
 import { Home, Users, FileText, Settings, ShieldAlert, Activity } from "lucide-react";
 
-type Role = "PATIENT" | "PROVIDER_STAFF" | "ADMIN";
+type Role = "PATIENT" | "PROVIDER" | "SYSTEM_ADMIN";
 
 const NAV_ITEMS: Record<Role, { title: string; href: string; icon: React.ElementType }[]> = {
   PATIENT: [
     { title: "Dashboard", href: "/patient/dashboard", icon: Home },
     { title: "My Records", href: "/patient/records", icon: FileText },
-    { title: "Consent", href: "/patient/consent", icon: ShieldAlert },
+    { title: "Consent", href: "/patient/consents", icon: ShieldAlert },
     { title: "Settings", href: "/patient/settings", icon: Settings },
   ],
-  PROVIDER_STAFF: [
+  PROVIDER: [
     { title: "Dashboard", href: "/provider/dashboard", icon: Home },
     { title: "Patients", href: "/provider/patients", icon: Users },
-    { title: "Access Requests", href: "/provider/requests", icon: Activity },
+    { title: "Access Requests", href: "/provider/access", icon: Activity },
     { title: "Settings", href: "/provider/settings", icon: Settings },
   ],
-  ADMIN: [
+  SYSTEM_ADMIN: [
     { title: "Dashboard", href: "/admin/dashboard", icon: Home },
     { title: "Users", href: "/admin/users", icon: Users },
-    { title: "System Logs", href: "/admin/logs", icon: Activity },
-    { title: "Settings", href: "/admin/settings", icon: Settings },
+    { title: "Providers", href: "/admin/providers", icon: Activity },
+    { title: "Audit Logs", href: "/admin/audit", icon: FileText },
+    { title: "System Config", href: "/admin/settings", icon: Settings },
   ],
 };
 

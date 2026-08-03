@@ -11,6 +11,7 @@ export interface AuthenticateUserResponse {
     id: string;
     role: string;
     name: string;
+    providerId?: string;
   };
 }
 
@@ -33,13 +34,24 @@ export class AuthenticateUserUseCase {
     }
 
     const tokens = this.tokenService.generateTokens(user);
+    
+    // Fetch providerId if the user is a provider staff
+    let providerId: string | undefined = undefined;
+    if (user.role === 'PROVIDER') {
+      const { prisma } = require('@shias/database');
+      const staff = await prisma.providerStaff.findFirst({ where: { userId: user.id } });
+      if (staff) {
+        providerId = staff.providerId;
+      }
+    }
 
     return {
       tokens,
       user: {
         id: user.id,
         role: user.role,
-        name: user.name
+        name: user.name,
+        providerId
       }
     };
   }

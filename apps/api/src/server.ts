@@ -10,8 +10,8 @@ import { pointerRoutes } from './presentation/http/routes/pointer.routes';
 import { consentRoutes } from './presentation/http/routes/consent.routes';
 import { accessRoutes } from './presentation/http/routes/access.routes';
 import { auditRoutes } from './presentation/http/routes/audit.routes';
-
 import { patientRoutes } from './presentation/http/routes/patient.routes';
+import { userRoutes } from './presentation/http/routes/user.routes';
 
 const server = Fastify({
   logger: {
@@ -21,6 +21,18 @@ const server = Fastify({
 });
 
 server.addHook('onRequest', (request, reply, done) => {
+  // CORS configuration
+  reply.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  reply.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  reply.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-correlation-id, Origin, Accept');
+  reply.header('Access-Control-Allow-Credentials', 'true');
+  
+  if (request.method === 'OPTIONS') {
+    reply.status(200).send();
+    return;
+  }
+
+  // Correlation ID
   const correlationId = (request.headers['x-correlation-id'] as string) || crypto.randomUUID();
   request.id = correlationId;
   correlationContext.run({ correlationId }, done);
@@ -30,10 +42,11 @@ server.setErrorHandler(errorHandler);
 server.register(authRoutes, { prefix: '/api/v1/auth' });
 server.register(providerRoutes, { prefix: '/api/v1' });
 server.register(pointerRoutes, { prefix: '/api/v1' });
-server.register(consentRoutes, { prefix: '/api/v1/consents' });
+server.register(consentRoutes, { prefix: '/api/v1' });
 server.register(accessRoutes, { prefix: '/api/v1' });
 server.register(auditRoutes, { prefix: '/api/v1/audit' });
 server.register(patientRoutes, { prefix: '/api/v1' });
+server.register(userRoutes, { prefix: '/api/v1' });
 
 server.get('/v1/health', async (request, reply) => {
   try {
@@ -48,8 +61,8 @@ server.get('/v1/health', async (request, reply) => {
 
 const start = async () => {
   try {
-    await server.listen({ port: 3000, host: '0.0.0.0' });
-    console.log(`Server listening on port 3000`);
+    await server.listen({ port: 3001, host: '0.0.0.0' });
+    console.log(`Server listening on port 3001`);
   } catch (err) {
     server.log.error(err);
     process.exit(1);

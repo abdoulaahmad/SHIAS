@@ -16,6 +16,14 @@ export const useProviderPointers = (providerId: string | undefined) => {
   });
 };
 
+export const usePatientPointers = (patientId: string | undefined) => {
+  return useQuery({
+    queryKey: pointerKeys.list(patientId!),
+    queryFn: () => pointerApi.getPatientPointers(patientId!),
+    enabled: !!patientId,
+  });
+};
+
 export const useRegisterPointerMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -52,6 +60,5 @@ export const usePatientSearch = (query: string) => {
     queryKey: ["patients", "search", query],
     queryFn: () => pointerApi.searchPatients(query),
     enabled: query.length >= 2,
-    retry: false, // Don't retry since we know it's going to 404 until backend implements it
   });
 };

@@ -6,7 +6,7 @@ import { useAuthStore } from "@/features/auth/store";
 
 interface RoleGuardProps {
   children: React.ReactNode;
-  allowedRoles?: Array<"PATIENT" | "PROVIDER_STAFF">;
+  allowedRoles?: Array<"PATIENT" | "PROVIDER" | "SYSTEM_ADMIN">;
 }
 
 export function RoleGuard({ children, allowedRoles }: RoleGuardProps) {

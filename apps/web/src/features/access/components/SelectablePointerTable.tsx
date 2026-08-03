@@ -1,4 +1,4 @@
-import {
+﻿import {
   Table,
   TableBody,
   TableCell,
@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/table';
 import { Pointer } from '../../pointer/types';
 import { PointerStatusBadge } from '../../pointer/components/PointerStatusBadge';
-import { format } from 'date-fns';
+import { format } from "@/lib/date-fns";
 import { Checkbox } from '@/components/ui/checkbox';
 
 interface SelectablePointerTableProps {

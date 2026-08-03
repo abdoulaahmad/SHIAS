@@ -1,6 +1,6 @@
-import { Timeline, TimelineItem } from '@/components/shared/Timeline';
+﻿import { Timeline, TimelineItem } from '@/components/shared/Timeline';
 import { AccessGrant } from '../types';
-import { format } from 'date-fns';
+import { format } from "@/lib/date-fns";
 
 interface AccessTimelineProps {
   grant: AccessGrant;

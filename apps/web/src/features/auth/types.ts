@@ -33,7 +33,7 @@ export interface AuthResponse {
     user: {
       id: string;
       email: string;
-      role: "PATIENT" | "PROVIDER_STAFF";
+      role: "PATIENT" | "PROVIDER";
     };
   };
 }

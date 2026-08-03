@@ -51,14 +51,26 @@ export const GetProviderSchema = {
   }
 };
 
+export const ListProvidersQuerySchema = Type.Object({
+  page: Type.Optional(Type.Number({ minimum: 1 })),
+  limit: Type.Optional(Type.Number({ minimum: 1, maximum: 100 })),
+  search: Type.Optional(Type.String()),
+  includeDeleted: Type.Optional(Type.Boolean()),
+  sortBy: Type.Optional(Type.String()),
+  sortOrder: Type.Optional(Type.Union([Type.Literal('asc'), Type.Literal('desc')]))
+});
+
+export const PaginatedProvidersSchema = Type.Object({
+  items: Type.Array(ProviderSchema),
+  page: Type.Number(),
+  pageSize: Type.Number(),
+  total: Type.Number()
+});
+
 export const ListProvidersSchema = {
-  querystring: Type.Object({
-    skip: Type.Optional(Type.Number({ minimum: 0 })),
-    take: Type.Optional(Type.Number({ minimum: 1, maximum: 100 })),
-    includeDeleted: Type.Optional(Type.Boolean())
-  }),
+  querystring: ListProvidersQuerySchema,
   response: {
-    200: Type.Array(ProviderSchema)
+    200: PaginatedProvidersSchema
   }
 };
 

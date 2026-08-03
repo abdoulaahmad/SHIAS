@@ -66,24 +66,38 @@ export class PrismaAuditRepository implements IAuditRepository {
     return records.map(r => this.mapToDomain(r));
   }
 
-  async search(filters: { category?: string; severity?: string; startDate?: Date; endDate?: Date; actorId?: string; resourceId?: string; correlationId?: string; }): Promise<AuditEvent[]> {
+  async findMany(options: any): Promise<any> {
+    const { page = 1, limit = 20, category, severity, startDate, endDate, actorId, resourceId, correlationId, sortBy = 'createdAt', sortOrder = 'desc' } = options;
+    const skip = (page - 1) * limit;
+
     const where: any = {};
-    if (filters.category) where.category = filters.category;
-    if (filters.severity) where.severity = filters.severity;
-    if (filters.actorId) where.actorId = filters.actorId;
-    if (filters.resourceId) where.resource = filters.resourceId;
-    if (filters.correlationId) where.correlationId = filters.correlationId;
+    if (category) where.category = category;
+    if (severity) where.severity = severity;
+    if (actorId) where.actorId = actorId;
+    if (resourceId) where.resource = resourceId;
+    if (correlationId) where.correlationId = correlationId;
     
-    if (filters.startDate || filters.endDate) {
+    if (startDate || endDate) {
       where.createdAt = {};
-      if (filters.startDate) where.createdAt.gte = filters.startDate;
-      if (filters.endDate) where.createdAt.lte = filters.endDate;
+      if (startDate) where.createdAt.gte = startDate;
+      if (endDate) where.createdAt.lte = endDate;
     }
 
-    const records = await this.prisma.auditLog.findMany({
-      where,
-      orderBy: { createdAt: 'desc' }
-    });
-    return records.map(r => this.mapToDomain(r));
+    const [total, records] = await Promise.all([
+      this.prisma.auditLog.count({ where }),
+      this.prisma.auditLog.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { [sortBy]: sortOrder }
+      })
+    ]);
+
+    return {
+      items: records.map(r => this.mapToDomain(r)),
+      page,
+      pageSize: limit,
+      total
+    };
   }
 }

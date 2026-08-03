@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
-import { usePatientSearch } from "../../hooks";
+import { usePatientSearch } from "../hooks";
 import { Input } from "@/components/ui/input";
 import { Search, Loader2 } from "lucide-react";
 
@@ -38,7 +38,7 @@ export function PatientSearchCombobox({ onSelect, selectedPatientId }: PatientSe
         <div className="absolute top-full z-50 mt-1 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none">
           {error ? (
             <div className="p-4 text-sm text-destructive text-center">
-              Failed to search patients. Backend endpoint /patients is missing.
+              Failed to search patients. Please try again.
             </div>
           ) : patients && patients.length > 0 ? (
             <ul className="max-h-60 overflow-auto p-1">

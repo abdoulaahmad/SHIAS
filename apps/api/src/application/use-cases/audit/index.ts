@@ -1,10 +1,11 @@
-import { IAuditRepository } from '../../../domain/audit';
+import { IAuditRepository, ListAuditEventsOptions, AuditEvent } from '../../../domain/audit';
+import { PaginatedResult } from '../../../domain/common';
 
 export class SearchAuditEventsUseCase {
   constructor(private readonly auditRepository: IAuditRepository) {}
 
-  async execute(filters: { category?: string; severity?: string; startDate?: Date; endDate?: Date; actorId?: string; resourceId?: string; correlationId?: string; }) {
-    return this.auditRepository.search(filters);
+  async execute(options: ListAuditEventsOptions): Promise<PaginatedResult<AuditEvent>> {
+    return this.auditRepository.findMany(options);
   }
 }
 

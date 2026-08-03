@@ -1,12 +1,12 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Pointer } from "../../types";
 import { PointerStatusBadge } from "./PointerStatusBadge";
-import { format } from "date-fns";
+import { format } from "@/lib/date-fns";
 import { Button } from "@/components/ui/button";
 import { AlertDialog } from "@/components/ui/alert-dialog";
-import { useUpdatePointerMutation, useArchivePointerMutation } from "../../hooks";
+import { useUpdatePointerMutation, useArchivePointerMutation } from "../hooks";
 import { Archive, ShieldOff } from "lucide-react";
 
 export function PointerTable({ pointers, providerId }: { pointers: Pointer[], providerId: string }) {

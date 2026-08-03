@@ -50,6 +50,16 @@ export class RegisterProviderUseCase {
     await this.providerRepository.save(provider);
     await this.userRepository.save(user);
 
+    // Create the ProviderStaff link between the user and the provider
+    const { prisma } = require('@shias/database');
+    await prisma.providerStaff.create({
+      data: {
+        providerId: provider.id,
+        userId: user.id,
+        role: 'ADMIN',
+      }
+    });
+
     await this.eventPublisher.publish({
       eventName: 'ProviderRegistered',
       occurredOn: new Date(),

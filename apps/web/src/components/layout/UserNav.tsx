@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useLogoutMutation, useCurrentUser } from "@/features/auth/hooks";
 import { Button } from "@/components/ui/button";

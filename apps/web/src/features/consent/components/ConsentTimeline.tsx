@@ -1,5 +1,5 @@
-import { Consent } from "../../types";
-import { format } from "date-fns";
+﻿import { Consent } from "../../types";
+import { format } from "@/lib/date-fns";
 import { CheckCircle2, Clock, XCircle, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 

@@ -1,4 +1,4 @@
-import { PointerStatus } from "../../types";
+﻿import { PointerStatus } from "../../types";
 import { cn } from "@/lib/utils";
 
 export function PointerStatusBadge({ status }: { status: PointerStatus }) {

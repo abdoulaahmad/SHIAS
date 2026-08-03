@@ -1,4 +1,4 @@
-import { ConsentStatus } from "../../types";
+﻿import { ConsentStatus } from "../../types";
 import { cn } from "@/lib/utils";
 
 export function ConsentStatusBadge({ status }: { status: ConsentStatus }) {

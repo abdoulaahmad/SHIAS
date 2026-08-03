@@ -92,3 +92,74 @@ export const ValidateTokenSchema = {
     })
   }
 };
+
+export const AccessGrantSummarySchema = Type.Object({
+  id: Type.String(),
+  providerId: Type.String(),
+  providerName: Type.String(),
+  patientId: Type.String(),
+  patientHealthId: Type.Union([Type.String(), Type.Null()]),
+  patientName: Type.String(),
+  purpose: Type.String(),
+  status: Type.String(),
+  createdAt: Type.String({ format: 'date-time' }),
+  expiresAt: Type.Union([Type.String({ format: 'date-time' }), Type.Null()])
+});
+
+export const AccessRequestSummarySchema = Type.Object({
+  id: Type.String(),
+  providerId: Type.String(),
+  providerName: Type.String(),
+  patientId: Type.String(),
+  patientHealthId: Type.Union([Type.String(), Type.Null()]),
+  patientName: Type.String(),
+  purpose: Type.String(),
+  createdAt: Type.String({ format: 'date-time' })
+});
+
+export const ListAccessGrantsQuerySchema = Type.Object({
+  page: Type.Optional(Type.Number({ minimum: 1 })),
+  limit: Type.Optional(Type.Number({ minimum: 1, maximum: 100 })),
+  status: Type.Optional(Type.Enum(AccessStatus)),
+  providerId: Type.Optional(Type.String()),
+  patientId: Type.Optional(Type.String()),
+  sortBy: Type.Optional(Type.String()),
+  sortOrder: Type.Optional(Type.Union([Type.Literal('asc'), Type.Literal('desc')]))
+});
+
+export const ListAccessRequestsQuerySchema = Type.Object({
+  page: Type.Optional(Type.Number({ minimum: 1 })),
+  limit: Type.Optional(Type.Number({ minimum: 1, maximum: 100 })),
+  providerId: Type.Optional(Type.String()),
+  patientId: Type.Optional(Type.String()),
+  sortBy: Type.Optional(Type.String()),
+  sortOrder: Type.Optional(Type.Union([Type.Literal('asc'), Type.Literal('desc')]))
+});
+
+export const PaginatedAccessGrantsSchema = Type.Object({
+  items: Type.Array(AccessGrantSummarySchema),
+  page: Type.Number(),
+  pageSize: Type.Number(),
+  total: Type.Number()
+});
+
+export const PaginatedAccessRequestsSchema = Type.Object({
+  items: Type.Array(AccessRequestSummarySchema),
+  page: Type.Number(),
+  pageSize: Type.Number(),
+  total: Type.Number()
+});
+
+export const ListAllAccessGrantsSchema = {
+  querystring: ListAccessGrantsQuerySchema,
+  response: {
+    200: PaginatedAccessGrantsSchema
+  }
+};
+
+export const ListAllAccessRequestsSchema = {
+  querystring: ListAccessRequestsQuerySchema,
+  response: {
+    200: PaginatedAccessRequestsSchema
+  }
+};

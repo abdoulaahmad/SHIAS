@@ -54,12 +54,14 @@ export default function LoginPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" suppressHydrationWarning>
           <div className="space-y-2">
             <label className="text-sm font-medium" htmlFor="email">
               Email
             </label>
-            <Input id="email" type="email" {...register("email")} />
+            <div suppressHydrationWarning>
+              <Input id="email" type="email" {...register("email")} suppressHydrationWarning />
+            </div>
             {errors.email && (
               <p className="text-sm text-destructive">{errors.email.message}</p>
             )}
@@ -69,7 +71,9 @@ export default function LoginPage() {
             <label className="text-sm font-medium" htmlFor="password">
               Password
             </label>
-            <Input id="password" type="password" {...register("password")} />
+            <div suppressHydrationWarning>
+              <Input id="password" type="password" {...register("password")} suppressHydrationWarning />
+            </div>
             {errors.password && (
               <p className="text-sm text-destructive">{errors.password.message}</p>
             )}

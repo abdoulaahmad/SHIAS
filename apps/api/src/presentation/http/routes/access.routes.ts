@@ -6,7 +6,9 @@ import {
   RevokeAccessGrantSchema,
   ValidateTokenSchema,
   ListProviderGrantsSchema,
-  ListProviderAccessRequestsSchema
+  ListProviderAccessRequestsSchema,
+  ListAllAccessGrantsSchema,
+  ListAllAccessRequestsSchema
 } from './access.schemas';
 import { AccessGrant, AccessRequest } from '../../../domain/access';
 import { 
@@ -16,6 +18,8 @@ import {
   validateTokenUseCase,
   listProviderGrantsUseCase,
   listProviderAccessRequestsUseCase,
+  listAllGrantsUseCase,
+  listAllAccessRequestsUseCase,
   tokenService
 } from '../../../infrastructure/di/container';
 
@@ -112,5 +116,41 @@ export const accessRoutes: FastifyPluginAsync = async (fastify: FastifyInstance)
     const params = request.params as { providerId: string };
     const requests = await listProviderAccessRequestsUseCase.execute(params.providerId);
     return reply.status(200).send(requests.map(mapAccessRequest));
+  });
+  server.get('/access/grants', { schema: ListAllAccessGrantsSchema }, async (request: FastifyRequest, reply: FastifyReply) => {
+    const user = (request as any).user;
+    if (user.role !== 'ADMIN') {
+      return reply.status(403).send({ error: 'Forbidden', message: 'Admin access required' } as any);
+    }
+    
+    const query = request.query as any;
+    const grants = await listAllGrantsUseCase.execute({
+      page: query.page,
+      limit: query.limit,
+      status: query.status,
+      providerId: query.providerId,
+      patientId: query.patientId,
+      sortBy: query.sortBy,
+      sortOrder: query.sortOrder
+    });
+    return reply.status(200).send(grants);
+  });
+
+  server.get('/access/requests', { schema: ListAllAccessRequestsSchema }, async (request: FastifyRequest, reply: FastifyReply) => {
+    const user = (request as any).user;
+    if (user.role !== 'ADMIN') {
+      return reply.status(403).send({ error: 'Forbidden', message: 'Admin access required' } as any);
+    }
+    
+    const query = request.query as any;
+    const requests = await listAllAccessRequestsUseCase.execute({
+      page: query.page,
+      limit: query.limit,
+      providerId: query.providerId,
+      patientId: query.patientId,
+      sortBy: query.sortBy,
+      sortOrder: query.sortOrder
+    });
+    return reply.status(200).send(requests);
   });
 };

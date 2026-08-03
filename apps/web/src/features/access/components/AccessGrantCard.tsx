@@ -1,8 +1,8 @@
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+﻿import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { AccessGrant } from '../types';
 import { GrantStatusBadge } from './GrantStatusBadge';
 import { PurposeBadge } from './PurposeBadge';
-import { format } from 'date-fns';
+import { format } from "@/lib/date-fns";
 import { FileText, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';

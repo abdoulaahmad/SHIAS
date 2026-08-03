@@ -71,4 +71,31 @@ export class PrismaAccessGrantRepository implements IAccessGrantRepository {
     });
     return grants.map(g => this.toDomain(g));
   }
+
+  async findMany(options: any): Promise<any> {
+    const { page = 1, limit = 20, status, providerId, patientId, sortBy = 'createdAt', sortOrder = 'desc' } = options;
+    const skip = (page - 1) * limit;
+
+    const where: any = {};
+    if (status) where.status = status;
+    if (providerId) where.providerId = providerId;
+    if (patientId) where.patientId = patientId;
+
+    const [total, records] = await Promise.all([
+      this.prisma.accessGrant.count({ where }),
+      this.prisma.accessGrant.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { [sortBy]: sortOrder }
+      })
+    ]);
+
+    return {
+      items: records.map(r => this.toDomain(r as any)),
+      page,
+      pageSize: limit,
+      total
+    };
+  }
 }

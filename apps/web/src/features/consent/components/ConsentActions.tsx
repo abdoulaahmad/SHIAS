@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Consent } from "../../types";
-import { useApproveConsent, useRejectConsent, useRevokeConsent } from "../../hooks";
+import { useApproveConsent, useRejectConsent, useRevokeConsent } from "../hooks";
 import { Button } from "@/components/ui/button";
 import { AlertDialog } from "@/components/ui/alert-dialog";
 import { Check, X, ShieldAlert } from "lucide-react";

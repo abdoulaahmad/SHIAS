@@ -15,11 +15,22 @@ export const AuditEventSchema = Type.Object({
 });
 
 export const SearchAuditEventsQuerySchema = Type.Object({
+  page: Type.Optional(Type.Number({ minimum: 1 })),
+  limit: Type.Optional(Type.Number({ minimum: 1, maximum: 100 })),
   category: Type.Optional(Type.String()),
   severity: Type.Optional(Type.String()),
   startDate: Type.Optional(Type.String({ format: 'date-time' })),
   endDate: Type.Optional(Type.String({ format: 'date-time' })),
   actorId: Type.Optional(Type.String()),
   resourceId: Type.Optional(Type.String()),
-  correlationId: Type.Optional(Type.String())
+  correlationId: Type.Optional(Type.String()),
+  sortBy: Type.Optional(Type.String()),
+  sortOrder: Type.Optional(Type.Union([Type.Literal('asc'), Type.Literal('desc')]))
+});
+
+export const PaginatedAuditEventsSchema = Type.Object({
+  items: Type.Array(AuditEventSchema),
+  page: Type.Number(),
+  pageSize: Type.Number(),
+  total: Type.Number()
 });

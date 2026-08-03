@@ -71,8 +71,8 @@ export function AccessRequestWizard() {
             <div className="space-y-4 pt-4">
               <p className="text-sm text-muted-foreground">Search and select the patient you need to access records for.</p>
               <PatientSearchCombobox 
-                value={patientId}
-                onChange={setPatientId}
+                selectedPatientId={patientId}
+                onSelect={setPatientId}
               />
             </div>
           )}

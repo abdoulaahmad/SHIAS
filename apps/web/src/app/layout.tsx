@@ -1,14 +1,31 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
+import { ToastProvider } from "@/providers/ToastProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "SHIAS - Secure Health Identity & Access System",
-  description: "Secure Health Identity & Access System Portal",
+  title: {
+    default: "SHIAS - Secure Health Identity & Access System",
+    template: "%s | SHIAS",
+  },
+  description: "A secure, decentralized portal for patients and healthcare providers to manage identity, pointers, and access consents.",
+  openGraph: {
+    title: "SHIAS - Secure Health Identity & Access System",
+    description: "Manage healthcare identity, pointers, and access requests securely.",
+    url: "https://shias.example.com",
+    siteName: "SHIAS",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SHIAS",
+    description: "Secure Health Identity & Access System",
+  },
 };
 
 export default function RootLayout({
@@ -28,7 +45,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
-            {children}
+            <ToastProvider>
+              {children}
+            </ToastProvider>
           </QueryProvider>
         </ThemeProvider>
       </body>

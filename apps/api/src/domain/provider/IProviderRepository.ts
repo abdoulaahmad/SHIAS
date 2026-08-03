@@ -1,10 +1,15 @@
 import { Provider } from './Provider';
 import { ProviderStaff } from './ProviderStaff';
+import { PaginationOptions, PaginatedResult } from '../common';
+
+export interface ListProvidersOptions extends PaginationOptions {
+  includeDeleted?: boolean;
+}
 
 export interface IProviderRepository {
   findById(id: string): Promise<Provider | null>;
   findByNpi(npi: string): Promise<Provider | null>;
-  findAll(skip?: number, take?: number, includeDeleted?: boolean): Promise<Provider[]>;
+  findMany(options: ListProvidersOptions): Promise<PaginatedResult<Provider>>;
   save(provider: Provider): Promise<void>;
 }
 

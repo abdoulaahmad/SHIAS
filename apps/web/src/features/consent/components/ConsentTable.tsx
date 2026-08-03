@@ -1,6 +1,6 @@
-import { Consent } from "../../types";
+﻿import { Consent } from "../../types";
 import { ConsentStatusBadge } from "./ConsentStatusBadge";
-import { format } from "date-fns";
+import { format } from "@/lib/date-fns";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 

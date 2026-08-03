@@ -8,7 +8,7 @@ import { ChevronLeft } from "lucide-react";
 
 export default function RegisterPointerPage() {
   return (
-    <AppShell allowedRoles={["PROVIDER_STAFF"]}>
+    <AppShell allowedRoles={["PROVIDER"]}>
       <div className="mb-4">
         <Link href="/provider/pointers" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground">
           <ChevronLeft className="mr-1 h-4 w-4" />

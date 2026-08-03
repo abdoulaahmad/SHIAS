@@ -29,15 +29,37 @@ export class PrismaProviderRepository implements IProviderRepository {
     return this.mapToDomain(record);
   }
 
-  async findAll(skip: number = 0, take: number = 10, includeDeleted: boolean = false): Promise<Provider[]> {
-    const where = includeDeleted ? {} : { deletedAt: null };
-    const records = await this.prisma.provider.findMany({
-      where,
-      skip,
-      take,
-      orderBy: { createdAt: 'desc' }
-    });
-    return records.map(r => this.mapToDomain(r));
+  async findMany(options: any): Promise<any> {
+    const { page = 1, limit = 20, search, includeDeleted = false, sortBy = 'createdAt', sortOrder = 'desc' } = options;
+    const skip = (page - 1) * limit;
+
+    const where: any = {};
+    if (!includeDeleted) {
+      where.deletedAt = null;
+    }
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { npi: { contains: search, mode: 'insensitive' } }
+      ];
+    }
+
+    const [total, records] = await Promise.all([
+      this.prisma.provider.count({ where }),
+      this.prisma.provider.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { [sortBy]: sortOrder }
+      })
+    ]);
+
+    return {
+      items: records.map(r => this.mapToDomain(r)),
+      page,
+      pageSize: limit,
+      total
+    };
   }
 
   async save(provider: Provider): Promise<void> {

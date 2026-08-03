@@ -14,7 +14,7 @@ export default function ProviderPointersList() {
   const { data: pointers, isLoading, error } = useProviderPointers(user?.id);
 
   return (
-    <AppShell allowedRoles={["PROVIDER_STAFF"]}>
+    <AppShell allowedRoles={["PROVIDER"]}>
       <PageHeader 
         title="Pointer Management" 
         description="Manage the clinical pointers registered by your organization."

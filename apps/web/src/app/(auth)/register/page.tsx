@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -26,11 +26,10 @@ export default function RegisterPage() {
   const onSubmit = async (data: RegisterPatientDto) => {
     try {
       setError(null);
-      const response = await authApi.registerPatient(data);
-      if (response.success && response.data) {
-        setAuth(response.data.token, response.data.user);
-        router.push("/patient/dashboard");
-      }
+      await authApi.registerPatient(data);
+      // Registration successful, backend returns 201 Created (no body).
+      // Redirect to login page
+      router.push("/login?registered=true");
     } catch (err: any) {
       setError(err.message || "Registration failed");
     }

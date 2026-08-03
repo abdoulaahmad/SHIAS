@@ -1,5 +1,5 @@
-import { Consent } from "../../types";
-import { format } from "date-fns";
+﻿import { Consent } from "../../types";
+import { format } from "@/lib/date-fns";
 import { ConsentStatusBadge } from "./ConsentStatusBadge";
 
 export function ConsentDetailsCard({ consent }: { consent: Consent }) {

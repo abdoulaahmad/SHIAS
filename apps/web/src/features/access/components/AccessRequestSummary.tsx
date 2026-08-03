@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card';
+﻿import { Card, CardContent } from '@/components/ui/card';
 import { PurposeBadge } from './PurposeBadge';
 import { ConsentPurpose } from '../../consent/types';
 import { Pointer } from '../../pointer/types';

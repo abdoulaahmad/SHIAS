@@ -4,8 +4,9 @@ import { persist, createJSONStorage } from "zustand/middleware";
 interface User {
   id: string;
   email: string;
-  role: "PATIENT" | "PROVIDER_STAFF" | "ADMIN";
+  role: "PATIENT" | "PROVIDER" | "SYSTEM_ADMIN";
   name?: string;
+  providerId?: string;
 }
 
 interface AuthState {
@@ -30,7 +31,7 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "auth-storage", // name of the item in the storage (must be unique)
       storage: createJSONStorage(() => localStorage), // use localStorage
-      partialize: (state) => ({ token: state.token }), // only persist token for now
+      partialize: (state) => ({ token: state.token, user: state.user }), // persist token and user
     }
   )
 );

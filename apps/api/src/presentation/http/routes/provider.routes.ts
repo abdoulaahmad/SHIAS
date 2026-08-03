@@ -76,8 +76,16 @@ export const providerRoutes: FastifyPluginAsync = async (fastify: FastifyInstanc
   });
 
   server.get('/providers', { schema: ListProvidersSchema }, async (request: FastifyRequest, reply: FastifyReply) => {
-    const providers = await listProvidersUseCase.execute();
-    return reply.status(200).send(providers.map(mapProvider));
+    const query = request.query as any;
+    const result = await listProvidersUseCase.execute({
+      page: query.page,
+      limit: query.limit,
+      search: query.search,
+      includeDeleted: query.includeDeleted,
+      sortBy: query.sortBy,
+      sortOrder: query.sortOrder
+    });
+    return reply.status(200).send(result);
   });
 
   server.get('/providers/:id', { schema: GetProviderSchema }, async (request: FastifyRequest, reply: FastifyReply) => {

@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { Type } from '@sinclair/typebox';
-import { AuditEventSchema, SearchAuditEventsQuerySchema } from './audit.schemas';
+import { AuditEventSchema, SearchAuditEventsQuerySchema, PaginatedAuditEventsSchema } from './audit.schemas';
 import { 
   searchAuditEventsUseCase, 
   getAuditEventUseCase, 
@@ -28,7 +28,7 @@ export async function auditRoutes(fastify: FastifyInstance) {
     schema: {
       querystring: SearchAuditEventsQuerySchema,
       response: {
-        200: Type.Array(AuditEventSchema)
+        200: PaginatedAuditEventsSchema
       }
     }
   }, async (request, reply) => {
@@ -38,20 +38,25 @@ export async function auditRoutes(fastify: FastifyInstance) {
       startDate: query.startDate ? new Date(query.startDate) : undefined,
       endDate: query.endDate ? new Date(query.endDate) : undefined
     };
-    const events = await searchAuditEventsUseCase.execute(filters);
-    return events.map(e => ({
-      id: e.id.value,
-      correlationId: e.correlationId,
-      category: e.category,
-      severity: e.severity,
-      outcome: e.outcome,
-      action: e.action,
-      actor: { id: e.actor.id },
-      resource: { id: e.resource.id },
-      metadata: { details: e.metadata.details },
-      ipAddress: e.ipAddress,
-      createdAt: e.createdAt.toISOString()
-    }));
+    const result = await searchAuditEventsUseCase.execute(filters);
+    return {
+      items: result.items.map(e => ({
+        id: e.id.value,
+        correlationId: e.correlationId,
+        category: e.category,
+        severity: e.severity,
+        outcome: e.outcome,
+        action: e.action,
+        actor: { id: e.actor.id },
+        resource: { id: e.resource.id },
+        metadata: { details: e.metadata.details },
+        ipAddress: e.ipAddress,
+        createdAt: e.createdAt.toISOString()
+      })),
+      page: result.page,
+      pageSize: result.pageSize,
+      total: result.total
+    };
   });
 
   fastify.get('/events/:id', {

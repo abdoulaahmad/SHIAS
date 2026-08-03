@@ -6,7 +6,7 @@ import { RoleGuard } from "../shared/RoleGuard";
 
 interface AppShellProps {
   children: React.ReactNode;
-  allowedRoles?: Array<"PATIENT" | "PROVIDER_STAFF" | "ADMIN">;
+  allowedRoles?: Array<"PATIENT" | "PROVIDER" | "SYSTEM_ADMIN">;
 }
 
 export function AppShell({ children, allowedRoles }: AppShellProps) {

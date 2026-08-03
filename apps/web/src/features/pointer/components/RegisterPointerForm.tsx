@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PatientSearchCombobox } from "./PatientSearchCombobox";
-import { useRegisterPointerMutation } from "../../hooks";
+import { useRegisterPointerMutation } from "../hooks";
 import { useAuthStore } from "@/features/auth/store";
 import { ProblemAlert } from "@/components/shared/ProblemAlert";
 import { useRouter } from "next/navigation";
@@ -46,11 +46,16 @@ export function RegisterPointerForm() {
   const onSubmit = (data: FormData) => {
     if (!user) return;
     
+    if (!user.providerId) {
+      setError({ message: "Your session is missing provider information. Please log out and log back in." });
+      return;
+    }
+
     setError(null);
     registerMutation.mutate(
       {
         ...data,
-        providerId: user.id,
+        providerId: user.providerId,
         recordCreatedAt: new Date(data.recordCreatedAt).toISOString(),
       },
       {

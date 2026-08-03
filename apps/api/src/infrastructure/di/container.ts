@@ -1,6 +1,14 @@
 import { PrismaUserRepository, PrismaProviderRepository } from '../repositories';
 import { Argon2PasswordHasher, JwtTokenService } from '../services';
-import { RegisterPatientUseCase, RegisterProviderUseCase, AuthenticateUserUseCase, RefreshSessionUseCase, SearchPatientsUseCase } from '../../application/use-cases';
+import { 
+  RegisterPatientUseCase, 
+  RegisterProviderUseCase, 
+  AuthenticateUserUseCase, 
+  RefreshSessionUseCase, 
+  SearchPatientsUseCase,
+  ListUsersUseCase,
+  GetUserUseCase
+} from '../../application/use-cases';
 import { prisma } from '@shias/database';
 
 export const userRepository = new PrismaUserRepository(prisma);
@@ -57,7 +65,9 @@ import {
   RevokeAccessGrantUseCase,
   ValidateTokenUseCase,
   ListProviderGrantsUseCase,
-  ListProviderAccessRequestsUseCase
+  ListProviderAccessRequestsUseCase,
+  ListAllGrantsUseCase,
+  ListAllAccessRequestsUseCase
 } from '../../application/use-cases/access';
 
 const providerContextRepository = new ProviderContextRepo(prisma);
@@ -112,12 +122,16 @@ export const revokeAccessGrantUseCase = new RevokeAccessGrantUseCase(accessGrant
 export const validateTokenUseCase = new ValidateTokenUseCase(accessTokenService, accessGrantRepository);
 export const listProviderGrantsUseCase = new ListProviderGrantsUseCase(accessGrantRepository);
 export const listProviderAccessRequestsUseCase = new ListProviderAccessRequestsUseCase(accessRequestRepository);
+export const listAllGrantsUseCase = new ListAllGrantsUseCase(accessGrantRepository, providerContextRepository, userRepository);
+export const listAllAccessRequestsUseCase = new ListAllAccessRequestsUseCase(accessRequestRepository, providerContextRepository, userRepository);
 
 export const registerPatientUseCase = new RegisterPatientUseCase(userRepository, passwordHasher, domainEventPublisher);
 export const registerProviderUseCase = new RegisterProviderUseCase(userRepository, providerRepository, passwordHasher, domainEventPublisher);
 export const authenticateUserUseCase = new AuthenticateUserUseCase(userRepository, passwordHasher, tokenService);
 export const refreshSessionUseCase = new RefreshSessionUseCase(userRepository, tokenService);
 export const searchPatientsUseCase = new SearchPatientsUseCase(userRepository);
+export const listUsersUseCase = new ListUsersUseCase(userRepository);
+export const getUserUseCase = new GetUserUseCase(userRepository);
 import {
   SearchAuditEventsUseCase,
   GetAuditEventUseCase,

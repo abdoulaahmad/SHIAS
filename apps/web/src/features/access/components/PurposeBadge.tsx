@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/badge';
+﻿import { Badge } from '@/components/ui/badge';
 import { ConsentPurpose } from '../../consent/types';
 import { PurposeConfig } from '../utils/purposeConfig';
 import * as Icons from 'lucide-react';
